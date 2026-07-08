@@ -14,8 +14,8 @@ MODEL_PATH = os.path.join(PROJECT_ROOT, "model", "immo_property_sale_XGBoost_mod
 
 # Data Models
 class PropertyDetails(BaseModel):
-    latitude: float
-    longitude: float
+    latitude: float  
+    longitude: float    
     bedrooms: int
     livable_surface: float
     bathrooms: int

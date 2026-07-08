@@ -52,7 +52,7 @@ def generate_unseen_property() -> pd.DataFrame:
         "bedrooms":2,
         "livable_surface": [100.0],
         "bathrooms":1,
-        "toilets":1,
+        "toilets":1,  
         "has_parking":1,
         
         # Categorical Features
