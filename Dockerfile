@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 #Copy your API code and trained model
 COPY api/ ./api/
-COPY models/ ./models/
+COPY model/ ./model/
 
 WORKDIR /app/api
 
