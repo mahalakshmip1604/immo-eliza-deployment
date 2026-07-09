@@ -14,17 +14,17 @@ MODEL_PATH = os.path.join(PROJECT_ROOT, "model", "immo_property_sale_XGBoost_mod
 
 # Data Models
 class PropertyDetails(BaseModel):
-    latitude: float  
-    longitude: float    
-    bedrooms: int
+    latitude: Optional[float]=None  
+    longitude: Optional[float]=None 
+    bedrooms: int = 1
     livable_surface: float
-    bathrooms: int
-    toilets: int
+    bathrooms: int = 1
+    toilets: int = 1
     category: str
     province: str
-    epc: str
+    epc: Optional[str]="unknown"
     building_state: Optional[str]="unknown"
-    has_parking: Optional[int] = 0
+    has_parking: int = 0
 
 class PredictionInput(BaseModel):
     data: PropertyDetails
