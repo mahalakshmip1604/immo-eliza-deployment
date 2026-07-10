@@ -2,17 +2,6 @@
 
 A small machine-learning deployment that predicts Belgian residential property sales prices. The project exposes a FastAPI-based prediction API and a Streamlit web interface for non-technical users to estimate market values.
 
-Live deployments
-
-- Render (API + interactive docs): https://immo-eliza-deployment-9tez.onrender.com/docs
-- Streamlit (UI): https://immo-eliza-deployment-becode-project.streamlit.app/
-
-Screenshots (attached)
-
-- Image 1 — API documentation (Swagger / OpenAPI UI) showing the POST /predict request body example and schema.
-- Image 2 — Streamlit web app UI showing the input form (Location & Type, Structural Details) and the estimated market value banner.
-
----
 
 ## Table of contents
 
@@ -31,12 +20,30 @@ Screenshots (attached)
 
 ---
 
+
 ## About
 
 This project loads a trained model to estimate Belgian property prices and offers:
 
-- a programmatic REST endpoint for predictions (FastAPI), and
-- a user-friendly Streamlit front-end for entering property features and displaying estimates.
+![Architecture Diagram](images/architecture.png)
+
+- A programmatic REST endpoint for predictions (FastAPI), and
+- A user-friendly Streamlit front-end for entering property features and displaying estimates.
+- The Streamlit UI collects user inputs and either (a) calls the running prediction API (POST /predict) or (b) loads the model directly and predicts locally.
+- The FastAPI application loads the serialized model at startup and exposes endpoints (POST /predict) that accept validated JSON payloads (via Pydantic) and return predicted prices.
+
+**Live deployments**
+
+- Render (API + interactive docs): https://immo-eliza-deployment-9tez.onrender.com/docs
+- Streamlit (UI): https://immo-eliza-deployment-becode-project.streamlit.app/
+
+<u>Screenshots:</u>
+
+- API documentation (Swagger / OpenAPI UI) showing the POST /predict request body example and schema.
+
+  ![render_deploy Diagram](images/render_deploy.png)
+- Streamlit web app UI showing the input form (Location & Type, Structural Details) and the estimated market value banner.
+- ![streamlit_deploy Diagram](images/streamlit_deploy.png)
 
 ## Features
 
@@ -69,7 +76,7 @@ See `requirements.txt` (example dependencies observed in repository):
 
 ---
 
-## Project structure (typical / recommended)
+## Project structure
 
 (Adjust actual filenames/paths to match this repo)
 
@@ -80,14 +87,6 @@ See `requirements.txt` (example dependencies observed in repository):
 - `streamlit_app.py` (or `app.py`) — Streamlit UI entrypoint
 - `utils/` or `src/` — helpers for preprocessing, feature engineering, geocoding
 - `tests/` — optional tests
-
-### How it fits together
-
-
- ![Architecture Diagram](images/architecture.png)
-
-- The Streamlit UI collects user inputs and either (a) calls the running prediction API (POST /predict) or (b) loads the model directly and predicts locally.
-- The FastAPI application loads the serialized model at startup and exposes endpoints (POST /predict) that accept validated JSON payloads (via Pydantic) and return predicted prices.
 
 ---
 
@@ -118,7 +117,7 @@ pip install -r requirements.txt
 
 ## Model artifact
 
-- The API and Streamlit app expect a trained model artifact (for example `models/model.joblib`). If no artifact is present in the repository, add a serialized model file at the path referenced by the code, or update the code to point to your model location.
+- The API and Streamlit app expect a trained model artifact (`models/immo_property_sale_XGBoost_model.joblib`). If no artifact is present in the repository, add a serialized model file at the path referenced by the code, or update the code to point to your model location.
 - Recommended serialization: `joblib.dump()` for scikit-learn / xgboost models.
 
 ---
@@ -128,7 +127,7 @@ pip install -r requirements.txt
 Typical command (adjust `module:app` to the actual module and app variable used in the repo):
 
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn api.api:app --reload --host 0.0.0.0 --port 8000
 ```
 
 Once running, open interactive docs:
@@ -139,7 +138,6 @@ http://127.0.0.1:8000/docs
 
 Notes:
 
-- If your app module name differs (e.g., `app:app`, `api:app`), change the uvicorn import accordingly.
 - When deploying to platforms like Render, ensure the service listens on the `PORT` environment variable provided by the platform.
 
 ---
@@ -171,7 +169,7 @@ Expected request body (example — matches schema shown in Swagger screenshot):
 
 Response
 
-- The API typically returns a JSON object containing the predicted price (float) and optional metadata (e.g., `model_version`, `input_echo`). The Streamlit UI displays the predicted market value in a user-friendly banner (see Image 2).
+- The API typically returns a JSON object containing the predicted price (float) . The Streamlit UI displays the predicted market value in a user-friendly banner.
 
 ---
 
@@ -229,10 +227,10 @@ print(resp.status_code, resp.json())
 Start the Streamlit app (adjust filename if different):
 
 ```bash
-streamlit run streamlit_app.py
+streamlit run streamlit/app_frontend.py
 ```
 
-UI layout (matches screenshot Image 2):
+UI layout :
 
 - Location & Type: property type, province, latitude, longitude (there may be a "Search coordinates" helper)
 - Structural Details: bedrooms, livable surface (m²), EPC rating, building condition, bathrooms, toilets, parking checkbox
@@ -260,24 +258,6 @@ Streamlit Community Cloud (share.streamlit.io)
   - Use Streamlit secrets manager for any credentials or secret configuration.
   - Confirm CORS settings on the API to permit calls from the Streamlit host if needed.
 
-CORS & networking
-
-- If the Streamlit front-end (on a different domain) calls the API, enable appropriate CORS support in FastAPI:
-
-```python
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://your-streamlit-host.example"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-```
-
-- Restrict `allow_origins` to specific hosts in production.
-
 ---
 
 ## Author
@@ -286,7 +266,6 @@ app.add_middleware(
 - LinkedIn: [www.linkedin.com/in/mahalakshmi-palanivel-4b6701296](https://www.linkedin.com/in/mahalakshmi-palanivel-4b6701296)
 
 ---
-
 
 **Last Updated**: July 2026
 **Project**: BeCode Training Solo Project
