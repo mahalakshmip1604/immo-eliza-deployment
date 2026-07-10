@@ -83,6 +83,9 @@ See `requirements.txt` (example dependencies observed in repository):
 
 ### How it fits together
 
+
+ ![Architecture Diagram](../images/architecture.png)
+
 - The Streamlit UI collects user inputs and either (a) calls the running prediction API (POST /predict) or (b) loads the model directly and predicts locally.
 - The FastAPI application loads the serialized model at startup and exposes endpoints (POST /predict) that accept validated JSON payloads (via Pydantic) and return predicted prices.
 
@@ -274,13 +277,6 @@ app.add_middleware(
 ```
 
 - Restrict `allow_origins` to specific hosts in production.
-
----
-
-## UX notes (from screenshots)
-
-- Image 1: The Swagger/OpenAPI UI shows the POST /predict schema and an example JSON payload. Use the example as a template when calling the API programmatically.
-- Image 2: The Streamlit UI organizes inputs into sections: "Location & Type" and "Structural Details" with fields for latitude, longitude, bedrooms, livable surface (m²), EPC rating, building condition, bathrooms, toilets, and parking. After submitting, the app displays: "Estimated Market Value: €352,220.59" style banner.
 
 ---
 
