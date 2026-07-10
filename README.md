@@ -84,7 +84,7 @@ See `requirements.txt` (example dependencies observed in repository):
 ### How it fits together
 
 
- ![Architecture Diagram](../images/architecture.png)
+ ![Architecture Diagram](images/architecture.png)
 
 - The Streamlit UI collects user inputs and either (a) calls the running prediction API (POST /predict) or (b) loads the model directly and predicts locally.
 - The FastAPI application loads the serialized model at startup and exposes endpoints (POST /predict) that accept validated JSON payloads (via Pydantic) and return predicted prices.
